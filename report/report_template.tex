@@ -177,11 +177,40 @@
 \newpage
 % \thispagestyle{empty}
 \section*{Introduction}
-- NLP low level tasks
-- NLP word embeddings
-- Text embeddings
 
-- Need for theory
+Text documents have been, until recently, an underexploited
+source of information due to their complex, non-numerical
+structure. Low level natural language processing (NLP)
+tasks as text classification, 
+sequence tagging (POS-tagging, named entity recognition, ...) and 
+parsing have long been tackled through bag-of-words methods 
+and hidden markov models. The application of deep learning 
+to NLP tasks (started around 2010s) has opened new, complementary 
+and effective ways to solve these problems, eventually leading to core
+innovations in high-level tasks such as question answering or 
+language generation. Using feed-forward networks 
+to generate low-dimensionnal representation of sparse, high 
+dimensionnal word vectors; recurrent neural networks as LSTMs
+to fit the sequential nature of sentences; and later on attention mechanims,
+deep learning techniques have set new baselines on traditional benchmarks. 
+However, the efficiency of these results is totally empirical 
+and is not backed by theoretical results, in addition to having 
+high computationnal costs. The article studied in this project \cite{arora2018sensing}
+aims at giving some results on unsupervised text embeddings. 
+\\ \\
+To do so, it focusses on a compressed sensing view of the text 
+embedding problem, which aims at provinding low-dimensionnal representation
+for texts. As words can be viewed 
+as very sparse vectors in the vocabulary space, providing a 
+low-dimensionnal representation of a text can be seen as measuring 
+words signals in a compressed way. The article explores this idea, 
+and links compressed sensing to some LSTMs-learned text representations.
+In order to evaluate such representations (through their 
+performances on text classification), authors
+ adapts a result in \cite{Calderbank2009CompressedL} on the quality
+of low-dimensionnal compressed sensing representations as inputs
+for a classification problem. 
+
 
 \newpage 
 
