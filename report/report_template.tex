@@ -209,7 +209,14 @@ In order to evaluate such representations (through their
 performances on text classification), authors
  adapts a result in \cite{Calderbank2009CompressedL} on the quality
 of low-dimensionnal compressed sensing representations as inputs
-for a classification problem. 
+for a classification problem. \\ \\
+In this work, we will first recall what are words and text embeddings, 
+in order to recall the basic NLP background for a non-specialized reader,
+and we will present author's text embeddings.
+Then, we will focuss on the core part of this project : the compressed 
+sensing part, and its application in text embeddings. Finally, we 
+will present a reproduction of author's results, and discuss their
+ statings and their implications.
 
 
 \newpage 
@@ -218,7 +225,114 @@ for a classification problem.
 \newpage
 
 \section{Text embeddings}
+
+A text embedding is a vector representing a text. Usually, 
+we want this representation to be low-dimensionnal, and to 
+keep some information on the meaning of the text. By necessity, 
+these representations are generally unsupervised : it would be 
+hard to define a "standard" representation to be learned in a 
+supervised way. In this section, we recall usual ways to 
+learn to generate word embeddings - upon which lie LSTMs text embeddings -, 
+text embeddings, and we explain in which ways they can be used for 
+tasks as text classification.
+
+
 \subsection{Word embeddings}
+
+The very beginning of most popular
+text embeddings is word embeddings. In this part
+we will briefly explain how such embeddings are learned, and we will
+set the definitions and the general context for the rest of the 
+work. \\ \\
+Supposing that we have a vocabulary 
+$\mathcal{V} = \{w_1, ..., w_V \}$, of size 
+$| \mathcal{V} | = V$, a natural vector representation of any word 
+$w_i, i=1, ..., V$ is the following :
+\begin{align*}
+    w_i &= 
+    \left (
+    \begin{array}{c}
+        0 \\
+        \vdots \\
+        0 \\
+        1 \\
+        0 \\
+        \vdots \\
+        0 \\
+    \end{array}
+    \right ) \leftarrow i,\ \ \ w_i \in \R^V
+\end{align*}
+
+The problem with this simple representation is the dimension ($V$)
+and its sparsity ($||w_i||_0 = 1, \forall i= 1, ..., V$) of the vectors.
+To adress this issue, many techniques have been proposed, especially 
+in recent deep learning developments. Non-deep learning techniques 
+are based on co-occurence matrices : 
+given a set $\mathcal{D}$ of
+documents, we first build a matrix containing the number of co-occurrences
+of every word in all documents in a context window of size $c$, 
+for instance :
+\begin{align*}
+    M&=
+    \left (
+    \begin{array}{ccc}
+        C(w_1, w_1) & \dots & C(w_1, w_V) \\
+            \vdots    & \ddots&   \vdots       \\
+        C(w_V, w_1) & \dots & C(w_V, w_V) \\
+    \end{array}
+    \right ) \in \R^{V\times V}
+\end{align*} 
+Where $C(w_i, w_j)$ is the number of times that the word $w_j$ appears 
+in the context of $w_i$, the context being defined as the 
+words far from at most $c$ words from $w_i$ in any of the documents
+in $\mathcal{D}$. This matrix is usually regularized using 
+positive pointwise mutual information (PPMI). A word $w_i$
+is then represented as the $i$-th line of $M$, or its
+PPMI counterpart. However, this representation does not get rid
+of dimension neither sparsity problems. Assuming the PPMI
+matrix is very sparse, we use, as it is frequently
+done in high-dimensionnal statistics,
+a singular value decomposition $M^{\text{PPMI}} = W \times D \times C$, 
+keeping only the $k$
+most important singular values and vectors, leading to a new truncated
+version of $W$, of size $V\times k$, which becomes the embedding
+matrix, each line being a word's embedding. This decomposition
+has good denoising and generalization properties. \\ \\
+In parallel, the most popular deep learning embedding
+is the Word2Vec embedding, proposed in \cite{NIPS2013_5021}. This 
+embedding is learned by trying to predict a word from its context 
+(CBOW), or vice versa to predict a context from a given word 
+(skip-gram); using a 1-hidden layer feed-forward neural network
+(Figure \ref{skip-arch}). 
+
+\begin{center}
+    \captionof{figure}{Skip-gram architecture for Word2Vec}
+    \includegraphics[scale=0.4]{skip-arch}
+    \label{skip-arch}
+\end{center}
+Using some regularization and computationnal tricks during the training,
+as replacing the softmax output function computation by a 
+hierarchical softmax computation, or as using negative sampling loss
+as an objective function, or doing frequency subsampling; which are 
+detailed in \cite{Mikolov2013}; Word2Vec embeddings achieved better 
+generalization and denoising properties than SVD. The main 
+idea behind both Word2Vec and SVD embeddings, which makes them 
+coherent as a good semantic representation, is called 
+the distributionnal hypothesis. This linguistic hypothesis is built upon
+Firth's statement that \textit{"a word is characterized by the 
+company that it keeps"}. Thus, words employed in similar contexts
+are more likely to have similar meanings. However, latest deep learning 
+developments seem to have abandoned this approach, replaced by language modelling
+as in \cite{howard2018universal, Peters_2018, devlin2018bert}, which 
+are outside the scope of this project. \\ \\
+The evaluation of such embeddings is difficult, as they are learned in an 
+unsupervised way. However, two techniques are generally used to assess
+embeddings representation quality : the evaluation of the embedding through
+a downstream task, i.e. for instance the evaluation of classic text classifiers 
+using the evaluated embedding as an input; and an evaluation through 
+word similarities, with the objective that near vectors (regarding 
+cosine distance) represent words with similar meanings. This evaluation
+techniques are used in the same manner for text embeddings.
 
 \subsection{From word embeddings to text embeddings}
 
@@ -230,6 +344,10 @@ for a classification problem.
 
 \subsection{Why text embeddings? }
 
+
+
+
+\newpage
 \section{Text embedding as a Compressed Sensing problem}
 
 \subsection{Results on compressed sensing for classification}
@@ -241,9 +359,12 @@ for a classification problem.
 
 
 
+
+
+\newpage
 \section{Experiments and discussion}
 
-\subsection{Results reproducing}
+\subsection{Results reproduction}
 
 \subsection{Testing DisC embeddings on real life data}
 
