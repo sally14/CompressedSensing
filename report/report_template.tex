@@ -125,32 +125,21 @@
     \def\endttabular{%
     \crcr\egroup\egroup}
     
-    % Couleurs
+    
     
     \usepackage{tcolorbox}
     
-    
-    
-    %équivalent tilde : \sim
-    %très petit, grand \ll et \gg
-    %Pour les formules aller sur codecogs
-    %Si "missing delimiter" mettre un point derrière le \right (car il finit la ligne cf forum) ou alors : ne pas oublier que c'est \right\}
-    %ANSI : mettre latin1`
-    %Pour environnement align : mettre & devant le = pour bien aligner 
-    %Mettre le tableofcontents avant pour avoir une table avant le document et après sinon
-    %Attention : bien lancer deux fois lors d'une modification de la table des matières
-    %Attention : il ne capte pas les environnements dans les tableaux : faire des environnements tabularx
-    
+  
     \hypersetup{colorlinks=true,linkcolor=black}
     
     \usepackage{fancyhdr}
     \pagestyle{fancy}
-    \lfoot{S. DO }
+    \lfoot{S. DO, L. ZANINI }
     \rfoot{\thepage}
     \cfoot{ }
-    \lhead{REPORT NAME}
-    \chead{ }
-    \rhead{  }
+    \lhead{COMPRESSED SENSING PROJECT}
+    \chead{}
+    \rhead{}
     
     \renewcommand{\footrulewidth}{1pt}
     
@@ -166,35 +155,74 @@
     \hrulefill
     \begin{center}\Huge
     % End-to-end Multilingual 
-    REPORT NAME \\ 
-    \textit{\Large a report  }
+    Compressed Sensing Project \\ 
+    \textit{\Large A compressed sensing view of unsupervised text embeddings  }
     \end{center}
     \hrulefill
     \vspace*{1cm}
     \begin{center} \Large
-    Salom� Do 
+    Salomé Do, Lucas Zanini
     \end{center}
     \vspace*{\stretch{1}}
     \begin{flushright}
-    date
+    March, 22nd 2019
     \end{flushright}
     \end{titlepage}
     
 \newpage
-% \thispagestyle{empty}
-\section*{Acknowledgements}
-\newpage 
+% % \thispagestyle{empty}
+% \section*{Acknowledgements}
+% \newpage 
 
 \newpage
 % \thispagestyle{empty}
 \section*{Introduction}
+- NLP low level tasks
+- NLP word embeddings
+- Text embeddings
+
+- Need for theory
 
 \newpage 
 
-
-\newpage
-% \thispagestyle{empty}
 \tableofcontents
-\newpage 
+\newpage
 
+\section{Text embeddings}
+\subsection{Word embeddings}
+
+\subsection{From word embeddings to text embeddings}
+
+\subsubsection{LSTMs}
+
+\subsubsection{Bag of n-Grams}
+
+\subsubsection{DisC embeddings}
+
+\subsection{Why text embeddings? }
+
+\section{Text embedding as a Compressed Sensing problem}
+
+\subsection{Results on compressed sensing for classification}
+
+
+\subsection{Links with LSTMs}
+
+\subsection{Sparse recovery with pretrained embeddings}
+
+
+
+\section{Experiments and discussion}
+
+\subsection{Results reproducing}
+
+\subsection{Testing DisC embeddings on real life data}
+
+
+\subsection{Discussion}
+
+
+
+\bibliography{references} 
+\bibliographystyle{ieeetr}
 \end{document}
