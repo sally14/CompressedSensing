@@ -1,0 +1,200 @@
+\documentclass{article}
+
+    \usepackage[utf8]{inputenc}
+    \usepackage[T1]{fontenc}
+    \usepackage{aeguill}
+    % \usepackage[francais]{babel}
+    \usepackage[a4paper]{geometry}
+    \usepackage{array}
+    \usepackage{amsfonts}
+    \usepackage{amsmath} 
+    \usepackage{amssymb}
+    \usepackage{amsthm}
+    \usepackage{xspace}
+    \usepackage{dsfont}
+    \usepackage{collcell}
+    \usepackage{datatool}
+    \usepackage{enumitem}
+    \usepackage{xstring}
+    \usepackage{booktabs}
+    \usepackage{environ}
+    \usepackage{bbm}
+    \usepackage{hyperref}
+    \usepackage{graphicx}
+    \usepackage{caption}
+    \usepackage{stmaryrd}
+    \usepackage[dvipsnames]{xcolor}
+    \usepackage{tikz}
+    \usetikzlibrary{trees}
+    \usepackage{ulem}
+    \usepackage{cancel}
+    \usepackage{pgfplots}
+    % \usepackage{minted}
+    % \usemintedstyle{monokai}
+    \usepackage{multicol}
+    
+    \pgfplotsset{compat=newest}
+    \usetikzlibrary{automata} % LATEX and plain TEX
+    \usetikzlibrary[automata] % ConTEXt
+    \usetikzlibrary{arrows}
+    \usetikzlibrary{automata,arrows,positioning,calc}
+    \xdefinecolor{vertf}{named}{OliveGreen}
+    \xdefinecolor{rougef}{named}{BrickRed}
+    \xdefinecolor{bleuf}{named}{BlueViolet}
+    \newcommand{\Var}{vecteur aléatoire réel\xspace}
+    \newcommand{\var}{variable aléatoire réelle\xspace}
+    \newcommand{\ssi}{si et seulement si\xspace}
+    \newcommand{\cad}{c'est-à-dire\xspace}
+    \newcommand{\fdr}{fonction de répartition \xspace}
+    \newcommand{\pp}{\mathbb P}
+    \newcommand{\un}{\mathbbm{1}}
+    \newcommand{\esp}{\mathbb E}
+    \newcommand{\vari}{\mathbb V}
+    \newcommand{\cov}{\text{Cov}} 
+    \newcommand{\gras}{\textbf}
+    \newcommand{\itemb}{\item[$\bullet$]}
+    \newcommand{\rouge}{\textcolor{red}}
+    \newcommand{\bleu}{\textcolor{blue}}
+    \newcommand{\rougef}{\textcolor{rougef}}
+    \newcommand{\vertf}{\textcolor{vertf}}
+    \newcommand{\bleuf}{\textcolor{bleuf}}
+    \newcommand{\limn}{\underset{n\rightarrow +\infty}{\lim}}
+    \newcommand{\flechn}{\underset{n\rightarrow +\infty}{\longrightarrow}}
+    \newcommand{\RR}{\mathbb R}
+    \newcommand{\Q}{\mathbb Q}
+    \newcommand{\N}{\mathbb N}
+    \newcommand{\Z}{\mathbb Z}
+    \newcommand{\R}{\mathbb R}
+    \newcommand{\D}{\mathbb D}
+    \newcommand{\C}{\mathbb C}
+    \newcommand{\Rn}{\mathbb R^n}
+    \newcommand{\Rp}{\mathbb R^p}
+    \newcommand{\Rq}{\mathbb R^q}
+    \newcommand{\brn}{\mathcal B(\mathbb R^n)}
+    \newcommand{\brp}{\mathcal B(\mathbb R^p)}
+    \newcommand{\brq}{\mathcal B(\mathbb R^q)}
+    \newcommand{\br}{\mathcal B(\mathbb R)}
+    \newcommand{\brbarre}{\mathcal B(\overline{\mathbb R}}
+    \newcommand{\pps}{P-presque-sûrement\xspace}
+    \newcommand{\mespos}{\mathcal M^+(\mathcal B(\mathbb R^n),\mathcal B(\overline{\mathbb R}))}
+    \newcommand{\cvps}{\xrightarrow[n\rightarrow\infty]{p.s.}}
+    \newcommand{\cvld}{\xrightarrow[n\rightarrow\infty]{L^2}}
+    \newcommand{\cvlp}{\xrightarrow[n\rightarrow\infty]{L^p}}
+    \newcommand{\cvp}{\xrightarrow[n\rightarrow\infty]{\mathbb P}}
+    \newcommand{\cvloi}{\xrightarrow[n\rightarrow\infty]{\mathcal L}}
+    \newcommand{\definition}{\vspace{0.5cm}\begin{tcolorbox}[colback=bleuf!5!white,colframe=bleuf!75!black,title=Définition]}
+    \newcommand{\propriete}{\vspace{0.5cm}\begin{tcolorbox}[colback=bleuf!5!white,colframe=bleuf!75!black,title=Propriété]}
+    \newcommand{\proprietee}{\vspace{0.5cm}\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Propriété]}
+    \newcommand{\theoreme}{\vspace{0.5cm}\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Théorème]}
+    \newcommand{\lemme}{\vspace{0.5cm}\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Lemme]}
+    \newcommand{\proposition}{\vspace{0.5cm}\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Proposition]}
+    \newcommand{\fin}{\end{tcolorbox}\vspace{0.5cm}}
+    \newcommand{\preuve}{\noindent\uline{Preuve :}\xspace}
+    \newcommand{\remarque}{\noindent\uline{Remarque :}\xspace}
+    \newcommand{\exemple}{\noindent\uline{Exemple :}\xspace}
+    \newcommand{\rappel}{\noindent\uline{Rappel :}\xspace}
+    \newcommand{\notation}{\noindent\uline{Notation :}\xspace}
+    
+    
+    % transposition de tableaux
+    
+    
+    \usepackage{booktabs,array}
+    \def\Midrule{\midrule[\heavyrulewidth]}
+    \newcount\rowc
+    
+    \makeatletter
+    \def\ttabular{%
+    \hbox\bgroup
+    \let\\\cr
+    \def\rulea{\ifnum\rowc=\@ne \hrule height 1.3pt \fi}
+    \def\ruleb{
+    \ifnum\rowc=1\hrule height 1.3pt \else
+    \ifnum\rowc=6\hrule height \heavyrulewidth 
+       \else \hrule height \lightrulewidth\fi\fi}
+    \valign\bgroup
+    \global\rowc\@ne
+    \rulea
+    \hbox to 10em{\strut \hfill##\hfill}%
+    \ruleb
+    &&%
+    \global\advance\rowc\@ne
+    \hbox to 10em{\strut\hfill##\hfill}%
+    \ruleb
+    \cr}
+    \def\endttabular{%
+    \crcr\egroup\egroup}
+    
+    % Couleurs
+    
+    \usepackage{tcolorbox}
+    
+    
+    
+    %équivalent tilde : \sim
+    %très petit, grand \ll et \gg
+    %Pour les formules aller sur codecogs
+    %Si "missing delimiter" mettre un point derrière le \right (car il finit la ligne cf forum) ou alors : ne pas oublier que c'est \right\}
+    %ANSI : mettre latin1`
+    %Pour environnement align : mettre & devant le = pour bien aligner 
+    %Mettre le tableofcontents avant pour avoir une table avant le document et après sinon
+    %Attention : bien lancer deux fois lors d'une modification de la table des matières
+    %Attention : il ne capte pas les environnements dans les tableaux : faire des environnements tabularx
+    
+    \hypersetup{colorlinks=true,linkcolor=black}
+    
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \lfoot{S. DO }
+    \rfoot{\thepage}
+    \cfoot{ }
+    \lhead{REPORT NAME}
+    \chead{ }
+    \rhead{  }
+    
+    \renewcommand{\footrulewidth}{1pt}
+    
+    \newcommand{\ind}{\setlength\parindent{0.5cm}} 
+    
+\begin{document}
+    
+    \begin{titlepage}
+    \begin{flushright}
+    \includegraphics{logo-ensae.jpg}
+    \end{flushright}
+    \vspace*{\stretch{0.5}}
+    \hrulefill
+    \begin{center}\Huge
+    % End-to-end Multilingual 
+    REPORT NAME \\ 
+    \textit{\Large a report  }
+    \end{center}
+    \hrulefill
+    \vspace*{1cm}
+    \begin{center} \Large
+    Salom� Do 
+    \end{center}
+    \vspace*{\stretch{1}}
+    \begin{flushright}
+    date
+    \end{flushright}
+    \end{titlepage}
+    
+\newpage
+% \thispagestyle{empty}
+\section*{Acknowledgements}
+\newpage 
+
+\newpage
+% \thispagestyle{empty}
+\section*{Introduction}
+
+\newpage 
+
+
+\newpage
+% \thispagestyle{empty}
+\tableofcontents
+\newpage 
+
+\end{document}
