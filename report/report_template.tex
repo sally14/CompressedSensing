@@ -95,7 +95,11 @@
     \newcommand{\rappel}{\noindent\uline{Rappel :}\xspace}
     \newcommand{\notation}{\noindent\uline{Notation :}\xspace}
     
-    
+     
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+ 
     % transposition de tableaux
     
     
@@ -513,7 +517,46 @@ problems.
 \newpage
 \section{Text embedding as a Compressed Sensing problem}
 
+Texts can be viewed as a collection of sparses measures (words) 
+over a complex signal (ideas, a meaning, a sentiment, etc.). The
+text embedding problem is thus directly a compressed sensing problem : 
+using a compression (=embedding) matrix $A$ over a collection of 
+words $x=w_1, ...w_T$ to produce a dense, compressed representation 
+$z = Ax$, with good reconstruction qualities. As the "reconstruction"
+quality of the compressed signal cannot, in this case, 
+be properly evaluated, we need results on this reconstruction
+quality through a downstream task as classification. 
+
 \subsection{Results on compressed sensing for classification}
+
+As we are interested in the evaluation of text embeddings through 
+text classification, the compressed learning approach proposed 
+in \cite{Calderbank2009CompressedL}, generalized and modified in 
+our article of interest \cite{arora2018sensing} gives us a useful result :
+
+\begin{theorem}
+    For any subset $\mathcal{X}\subset \R^N$ containing the origin, 
+    let $A\in \R^{d\times N}$ be $(\Delta, \mathcal{X})-$RIP, and $m$ 
+    samples $S=\{ (x_i, y_i)\} \subset \mathcal{X}\times \{-1, 1\}$
+    be drawn i.i.d. from the same distribution $\mathcal{D}$ over 
+    $\mathcal{X}$, with $||x||_2 \leq R$. \\ 
+    If $l$ is a $\lambda$-Lipschitz convex loss function and $w_0\in \R^N$
+    is its minimizer over $\mathcal{D}$, then, with probability
+    $1-2\delta$, the linear classifier $\hat{w}_A\in \R^d$ minimizing the 
+    $l_2$-regularized empirical loss function $l_{S_A}+\frac{1}{2C} ||w||_2^2$
+    over the compressed sample $S_A = \{(Ax_i, y_i) \}_{i=1}^m
+    \subset \R^d \times \{-1, 1\} $ satisfies :
+    \begin{align}
+        l_{\mathcal{D}}(\hat{w}_A) &\leq 
+        l_{\mathcal{D}}(w_0) + \mathcal{O}
+        \left ( 
+            \lambda R ||w_0||_2 \sqrt(\epsilon + \frac{1}{m}\log\frac{1}{\delta})
+        \right )
+    \end{align}
+    for an appropriate choice of $C$, and recalling that
+     $\Delta \mathcal{X} = \{x-x' : x, x' \in \mathcal{X} \}$, for 
+     any $\mathcal{X}\subset \R^N$
+\end{theorem}
 
 
 \subsection{Links with LSTMs}
