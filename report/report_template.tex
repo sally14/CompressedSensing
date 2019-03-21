@@ -177,7 +177,7 @@
 % % \thispagestyle{empty}
 % \section*{Acknowledgements}
 % \newpage 
-
+\pagenumbering{gobble}
 \newpage
 % \thispagestyle{empty}
 \section*{Introduction}
@@ -227,7 +227,7 @@ will present a reproduction of author's results, and discuss their
 
 \tableofcontents
 \newpage
-
+\pagenumbering{arabic}
 \section{Text embeddings}
 
 A text embedding is a vector representing a text. Usually, 
@@ -536,7 +536,7 @@ our article of interest \cite{arora2018sensing} gives us a useful result :
 
 \begin{theorem}
     For any subset $\mathcal{X}\subset \R^N$ containing the origin, 
-    let $A\in \R^{d\times N}$ be $(\Delta, \mathcal{X})-$RIP, and $m$ 
+    let $A\in \R^{d\times N}$ be $(\Delta \mathcal{X}, \varepsilon)-$RIP, and $m$ 
     samples $S=\{ (x_i, y_i)\} \subset \mathcal{X}\times \{-1, 1\}$
     be drawn i.i.d. from the same distribution $\mathcal{D}$ over 
     $\mathcal{X}$, with $||x||_2 \leq R$. \\ 
@@ -550,13 +550,90 @@ our article of interest \cite{arora2018sensing} gives us a useful result :
         l_{\mathcal{D}}(\hat{w}_A) &\leq 
         l_{\mathcal{D}}(w_0) + \mathcal{O}
         \left ( 
-            \lambda R ||w_0||_2 \sqrt(\epsilon + \frac{1}{m}\log\frac{1}{\delta})
+            \lambda R ||w_0||_2 \sqrt(\varepsilon + \frac{1}{m}\log\frac{1}{\delta})
         \right )
     \end{align}
     for an appropriate choice of $C$, and recalling that
      $\Delta \mathcal{X} = \{x-x' : x, x' \in \mathcal{X} \}$, for 
      any $\mathcal{X}\subset \R^N$
 \end{theorem}
+We briefly reproduce the ideas of proof of this theorem here, as we think that it is 
+an interesting result regarding the compressed sensing course. 
+\begin{proof}
+    First define the $l_2$-regularization of the loss function $l$ as :
+    \[L(w) = l(w) + \frac{1}{2C}||w||_2^2\]
+    \begin{lemma}
+        Let $\hat{w}$ be the classifier obtained minimzing :
+        $L_S(w) = \frac{1}{m} \sum_{i=1}^m l(w^Tx_i, y_i) + \frac{1}{2C}||w||_2^2 $,
+        where $l(., .)$ is a convex $\lambda$-Lipschitz function in the first coordinate. 
+        Then :
+        \[\hat{w} = \sum_{i=1}^m \alpha_i y_i x_i , \ \ \
+        |\alpha_i|\leq \frac{\lambda C}{m}, \forall i\]
+        The result holds in the compresssed domain.
+    \end{lemma}
+    \begin{proof}
+         By convexity, the only optimizer can be found
+        by taking first-order conditions :
+        \begin{align*}
+            \partial_w L_S(w) &= 
+                    \frac{w}{C} + \frac{1}{m} \sum_{i=1}^m \partial_{w^Tx_i} l(w^T x_i, y_i)x_i
+        \end{align*}
+        Then, we have :
+        \begin{align*}
+            \hat{w} &=- \frac{C}{m} \sum_{i=1}^m \partial_{\hat{w}^Tx_i} l(\hat{w}^T x_i, y_i)x_i \\
+                    &= \frac{C}{m} \sum_{i=1}^m - y_i\partial_{\hat{w}^Tx_i} l(\hat{w}^T x_i, y_i) y_i x_i
+        \end{align*}
+        As $y_i\in \{-1, 1\}$. 
+        $l$ is a $\lambda$-Lipschitz function, thus its sub-gradient 
+        is bounded by $\lambda$, implying $|\partial_{\hat{w}^Tx_i} l(\hat{w}^T x_i, y_i)| \leq \lambda$. 
+        Hence the result.
+    \end{proof}
+    \begin{lemma}
+        \[ x, x' \in \mathcal{X} 
+        \Rightarrow 
+        (1+\varepsilon) x^Tx' - 2R^2 \varepsilon 
+        \leq (Ax)^T (Ax') 
+        \leq (1-\varepsilon) x^Tx' + 2R^2 \varepsilon 
+        \]
+    \end{lemma}
+    \begin{proof}
+        In one of our hypothesis, $A$ is $(\Delta \mathcal{X}, \varepsilon)$-RIP. 
+        Then, by definition : 
+
+        \begin{align*}
+            (1-\varepsilon) ||x-x'||_2 
+            \leq ||A(x-x')||_2
+            \leq (1+\varepsilon) ||x-x'||_2 
+        \end{align*}
+        % Using the fact that if $x, x'$ are $k$-sparse, then $x-x'$ is 
+        % $2k$:-sparse
+        Using this, we show the first side of the inequation, 
+        as the other side is symmetric :
+        \begin{align*}
+            ||A(x-x')||_2^2 &= ||Ax||^2_2  + ||Ax'||^2_2 - 2 (Ax)^T(Ax') \\
+            (1-\varepsilon) ||x-x'||^2_2 &\leq ||Ax||^2_2  + ||Ax'||^2_2 - 2 (Ax)^T(Ax') \\
+            (1-\varepsilon) (||x||^2_2+||x'||^2_2 -2x^T x') 
+            &\leq ||Ax||^2_2  + ||Ax'||^2_2 - 2 (Ax)^T(Ax') \\
+        \end{align*}
+        As $0_N \in \mathcal{X}$, $A$ is also $(\mathcal{X},
+         \varepsilon)$-RIP, leading to having :
+        $||Ax||^2_2 \leq (1+\varepsilon)||x||^2_2$, and thus :
+        \begin{align*}
+            (1-\varepsilon) (||x||^2_2+||x'||^2_2 -2x^T x') 
+            &\leq (1+\varepsilon)(||x||^2_2  + ||x'||^2_2) - 2 (Ax)^T(Ax') \\
+        \end{align*}
+        Finally, using the hypothesis : $||x||_2 \leq R$, 
+        \[  (Ax)^T(Ax') \leq (1-\varepsilon)x^Tx' + 2R^2\varepsilon \]
+    \end{proof}
+    \begin{corollary}
+        \[
+            ||\hat{w}||_2^2 
+            \leq \lambda^2 C^2 R^2 \text{ and }
+            ||\hat{w}_A||_2^2 
+            \leq \lambda^2 C^2 (1+\varepsilon)^2 R^2
+        \]
+    \end{corollary}
+\end{proof}
 
 
 \subsection{Links with LSTMs}
