@@ -189,8 +189,8 @@ to NLP tasks (started around 2010s) has opened new, complementary
 and effective ways to solve these problems, eventually leading to core
 innovations in high-level tasks such as question answering or 
 language generation. Using feed-forward networks 
-to generate low-dimensionnal representation of sparse, high 
-dimensionnal word vectors; recurrent neural networks as LSTMs
+to generate low-dimensional representation of sparse, high 
+dimensional word vectors; recurrent neural networks as LSTMs
 to fit the sequential nature of sentences; and later on attention mechanims,
 deep learning techniques have set new baselines on traditional benchmarks. 
 However, the efficiency of these results is totally empirical 
@@ -199,16 +199,16 @@ high computationnal costs. The article studied in this project \cite{arora2018se
 aims at giving some results on unsupervised text embeddings. 
 \\ \\
 To do so, it focusses on a compressed sensing view of the text 
-embedding problem, which aims at provinding low-dimensionnal representation
+embedding problem, which aims at provinding low-dimensional representation
 for texts. As words can be viewed 
 as very sparse vectors in the vocabulary space, providing a 
-low-dimensionnal representation of a text can be seen as measuring 
+low-dimensional representation of a text can be seen as measuring 
 words signals in a compressed way. The article explores this idea, 
 and links compressed sensing to some LSTMs-learned text representations.
 In order to evaluate such representations (through their 
 performances on text classification), authors
  adapts a result in \cite{Calderbank2009CompressedL} on the quality
-of low-dimensionnal compressed sensing representations as inputs
+of low-dimensional compressed sensing representations as inputs
 for a classification problem. \\ \\
 In this work, we will first recall what are words and text embeddings, 
 in order to recall the basic NLP background for a non-specialized reader,
@@ -227,7 +227,7 @@ will present a reproduction of author's results, and discuss their
 \section{Text embeddings}
 
 A text embedding is a vector representing a text. Usually, 
-we want this representation to be low-dimensionnal, and to 
+we want this representation to be low-dimensional, and to 
 keep some information on the meaning of the text. By necessity, 
 these representations are generally unsupervised : it would be 
 hard to define a "standard" representation to be learned in a 
@@ -291,7 +291,7 @@ is then represented as the $i$-th line of $M$, or its
 PPMI counterpart. However, this representation does not get rid
 of dimension neither sparsity problems. Assuming the PPMI
 matrix is very sparse, we use, as it is frequently
-done in high-dimensionnal statistics,
+done in high-dimensional statistics,
 a singular value decomposition $M^{\text{PPMI}} = W \times D \times C$, 
 keeping only the $k$
 most important singular values and vectors, leading to a new truncated
@@ -336,11 +336,80 @@ techniques are used in the same manner for text embeddings.
 
 \subsection{From word embeddings to text embeddings}
 
-\subsubsection{LSTMs}
+In natural language processing, and more specifically in 
+high-level tasks, there is no interest on studying single words. 
+Thus, a natural question when working on texts, is : how to 
+transform word embeddings to a single text embedding? In this section
+we will describe 'natural' text embeddings, resembling the co-occurence
+matrix described above, used in the article; and LSTMs embeddings, 
+which are now more commonly used.
 
-\subsubsection{Bag of n-Grams}
+\subsubsection{Bag of n-Grams/Cooccurrences}
+
+In this part, we will suppose that we have a vocabulary 
+$\mathcal{V} = \{ v_1, ..., v_V\}$ and a document $d=w_1, ..., w_T$, 
+where $w_i \in \mathcal{V}$ for any $i=1, ..., T$, and a fixed integer 
+$n\in \N$. We recall 
+that a $n$-gram is a sequence of $n$ words, 
+for instance the set of unigrams is $\{v_1, ..., v_T \}$, the set 
+of bigrams is $\{(v_1,v_2), (v_2, v_3), (v_1, v_3) ..., (v_{V-1}, v_V) \}$, etc.
+We let $V_k$ be the number of possible $k$-grams over $\mathcal{V}$,
+independently of order ($V_1 = V$), and 
+$V_n^{\text{sum}} = \sum_{k=1}^n V_k$.\\ \\
+For any $k\in \N$, let $B_k$ be a vector indicating, 
+for any possible $k$-gram over $\mathcal{V}$, the number 
+of occurences of this $k$-gram in the document.
+A Bag-of-$n$-Grams, denoted $x^{\text{BonG}}$ is the concatenation of all the $B_k$ vectors
+for $k = 1, ..., n$ : 
+\[
+x^{\text{BonG}} = [B_1, ..., B_N]\]
+In order to simplify and get rid of order in the n-grams, author
+merge the $k$-grams in the vocabulary that are the same words in a 
+different order. Then, we can write :
+$B^{\text{Co-oc}}_k = \sum_{t=1}^{T-k+1} e_{ \{w_t, ..., w_{t+k-1}\}  }$. 
+A Bag-of-$n$-Co-occurrences (BonC) is then :
+
+\[
+x^{\text{BonC}} = [B^{\text{Co-oc}}_1, ..., B^{\text{Co-oc}}_N]\]
+
+These embeddings are sparse, $V_n^{\text{sum}}$-dimensional vectors.
+
 
 \subsubsection{DisC embeddings}
+This document embeddings relies on word embeddings. 
+Supposing that we have learned word embeddings and that we denote
+$x_{v_i} \in \R^d, d<<V$ the embedding of the word $v_i \in \mathcal{V}$, for any
+$i=1,..., n$; and that we still have our document $d= w_1, ..., w_T$; 
+then the unigram embedding of the document is :
+\[z^u = \sum_{t=1}^T x_{w_t}\]
+$z^u$ can be re-written as the product of a compression matrix $A$ 
+in which columns are word embeddings $x_w$; and the "Bag-of-1-grams" document embedding : 
+
+\[z^u = Ax^{\text{Bo1G}} = \sum_{t=1}^T A e_{w_t} = \sum_{t=1}^T x_{w_t} \]
+Authors extend this unigram definition to $n$-co-occurrences by using
+element-wise multiplication of word embeddings, defining: 
+\[\tilde{x}_{\{w_1, ..., w_n\}} = d^{(n-1)/2} \odot_{t=1}^n x_{w_t} \ \ \in \R^d \]
+Then, DisC (distributed co-occurence) embeddings are defined as
+the concatenation of:
+
+\[
+    z^{(n)} = \left [ 
+                C_1 \sum_{t=1}^T \tilde{x}_{w_t}, 
+                ..., 
+                C_n \sum_{t=1}^{T-n+1} \tilde{x}_{\{w_t, ..., w_t+n-1\}}
+              \right ]
+              \in \R^{nd}
+\]
+With $C_1,..., C_n$ being scaling factors, detailed later. As in the 
+unigram case, DisC embeddings are directly related to compressed sensing
+as we can find $A^{(n)}\in R^{dn \times V_n^{\text{sum}}}$ such that:
+\[z^{(n)} = A^{(n)}x^{BonC} \]
+
+
+\subsubsection{LSTMs}
+
+LSTMs, which stands for Long-Short-Term Memory are a kind of recurrent
+neural networks, introduced in \cite{Hochreiter:1997:LSM:1246443.1246450}.
 
 \subsection{Why text embeddings? }
 
