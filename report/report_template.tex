@@ -409,7 +409,85 @@ as we can find $A^{(n)}\in R^{dn \times V_n^{\text{sum}}}$ such that:
 \subsubsection{LSTMs}
 
 LSTMs, which stands for Long-Short-Term Memory are a kind of recurrent
-neural networks, introduced in \cite{Hochreiter:1997:LSM:1246443.1246450}.
+neural networks (RNN), introduced in \cite{Hochreiter:1997:LSM:1246443.1246450}.
+As with classic RNNs, the point in LSTMs is to be able to 
+handle sequential data, say for instance a document made of already 
+embedded words :
+
+\[   x =\{x_1, ..., x_T \} \]
+
+\noindent A given LSTM cell $A$ 'evolves' with the time, and is caracterized in time 
+by a \textit{hidden state} $h_t$ and a \textit{memory} $c_t$. We denote $A^{(t)}$ the state of cell
+$A$ at time $t$. $A^{(t)}$   has three inputs : 
+\begin{itemize}
+    \item $h_{t-1}$, the hidden state transmitted by the previous cell state $A^{(t-1)}$. 
+    \item $c_{t-1}$, the memory transmitted by the previous cell state $A^{(t-1)}$.
+    \item $x_t$, the 'real' sample input
+\end{itemize}
+And two outputs : 
+\begin{itemize}
+    \item $h_{t}$, the updated hidden state transmitted to  $A^{(t+1)}$. 
+    \item $c_{t}$, the updated memory transmitted to  $A^{(t+1)}$.
+\end{itemize}
+These inputs and outputs are schematized in Figure \ref{fig:LSTM1} \footnote{The figure is extracted from Christopher Olah's excellent blog : \href{http://colah.github.io/posts/2015-08-Understanding-LSTMs/}{http://colah.github.io/}}. 
+The core question of LSTMs is to define update rules for $h_t$ and $c_t$. First, we want to 
+know how to update memory, or in other words, which informations to forget and which informations
+to remember. To do so, we define :
+\begin{itemize}
+    \item $i_t = \sigma\left ( x_t U^i + h_{t-1} X^{i}\right) \in [0, 1]$, where $U^i, W^i$ are weights to learn.
+         This function is called the \textit{input gate}. The input gate is a weighted sum of
+         the sample data at time $t$ and the previous hidden state of the cell, regularized by the sigmoid function.
+         The inpute gate decides, what new information we are going to store in the updated memory, and in
+         which proportion, depending on the precedent data. 
+    \item $\tilde{c}_t = \tanh \left ( x_t U^c + h_{t-1} X^{c}\right ) \in [-1, 1] $, where $U^c, W^c$ are weights to learn.
+    $\tilde{c}_t$ is a candidate for creating 'new $c_{t}$ values'.
+    \item $f_t = \sigma \left (x_t U^f + h_{t-1} X^{f}\right ) \in [0,1]$, where $U^f, W^f$ are weights to learn.
+    This is called the \textit{forget gate}. The forget gate decides the proportion at which each element of the 
+    memory is going to be forgotten.
+\end{itemize}
+
+\noindent The memory can then be updated, with respect to the following rule:
+\begin{align*}
+    c_t = f_t * c_{t-1} + i_t * \tilde{c}_t
+\end{align*}
+
+\noindent Finally, to update the hidden state, we define the \textit{output gate} in the same fashion, and we update $h_t$ :
+
+\begin{align*}
+    o_t &= \sigma \left (x_t U^o + h_{t-1} X^{o}\right ) &\in& [0,1]  \\
+    h_t &= \tanh (c_t) * o_t  &\in& [-1, 1]
+\end{align*}
+
+
+
+
+Some variants of LSTM cells may define input, output and forget gates differently. For instance,
+the peephole version of LSTM implements the natural idea that the previous memory state $c_{t-1}$
+has to be considered when deciding the input, output and forget rates.  GRU, Gated Recurrent Units 
+are other variants of LSTMs. \\ \par 
+
+\begin{center}
+    \captionof{figure}{A representation of a LSTM cell in time}
+    \label{fig:LSTM1}
+    \includegraphics[scale=0.55]{LSTM.png}
+\end{center}
+One question remains : what exactly is the hidden state $h$? 
+$(h_t)_{t=1...T}$ can be viewed as the 'output' of the LSTM.  
+In our case, the final hidden state $h_T$ is directly used as 
+the document embedding. This representation of the document 
+is unsupervised, and the LSTM is usually trained on another 
+task, regarding which $(h_t)_{t=1...T}$ are features (see for 
+instance \cite{Lample_2016} for an example of LSTMs trained 
+for named entity recognition). 
+
+Appart from having a very flexible and modular structure,
+ LSTMs cells do not suffer of the same 
+vanishing gradient problem as RNNs in practice,
+ and are thus more effective
+in modelling sequential data. They are particularly adapted 
+to NLP problems because of their 
+sequential nature. 
+
 
 \subsection{Why text embeddings? }
 
