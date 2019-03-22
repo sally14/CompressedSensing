@@ -214,14 +214,17 @@ In order to evaluate such representations (through their
 performances on text classification), authors
  adapts a result in \cite{Calderbank2009CompressedL} on the quality
 of low-dimensional compressed sensing representations as inputs
-for a classification problem. \\ \\
+for a classification problem. Showing that some embeddings are 
+compressing matrix verifying the proper RIP conditions, 
+the above compressed learning results apply.  \\ \\
 In this work, we will first recall what are words and text embeddings, 
 in order to recall the basic NLP background for a non-specialized reader,
-and we will present author's text embeddings.
-Then, we will focuss on the core part of this project : the compressed 
-sensing part, and its application in text embeddings. Finally, we 
-will present a reproduction of author's results, and discuss their
- statings and their implications.
+and we will present author's text embeddings, how they 
+relate to compressed sensing, and the properties they verify 
+(useful RIP conditions for the rest of the work).
+Then, we will focuss the compressed 
+learning problem and its relation to LSTMs. 
+
 
  % Now that we have presented text embedding, we can present some of 
 % their most well-known applications. As text embeddings 
@@ -753,7 +756,7 @@ an very interesting result regarding the compressed sensing course.
         $[L_{\mathcal{S}}(\hat{w}) - L_{\mathcal{S}}(w^*)]_+  = 0$, and the result follows 
         directly. 
     \end{proof}
-\textbf{Proof of the theorem}:
+\noindent \textbf{Proof of the theorem}:
 \begin{proof} As 
 $l_{\mathcal{D}}(\hat{w}_A) \leq l_{\mathcal{D}}(\hat{w}_A) 
 + \frac{1}{2C} ||w^*_A||_2^2 = L_{\mathcal{D}(\hat{w_A})}$.
