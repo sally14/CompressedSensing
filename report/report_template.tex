@@ -561,14 +561,14 @@ our article of interest \cite{arora2018sensing} gives us a useful result :
     If $l$ is a $\lambda$-Lipschitz convex loss function and $w_0\in \R^N$
     is its minimizer over $\mathcal{D}$, then, with probability
     $1-2\delta$, the linear classifier $\hat{w}_A\in \R^d$ minimizing the 
-    $l_2$-regularized empirical loss function $l_{S_A}+\frac{1}{2C} ||w||_2^2$
+    $l_2$-regularized empirical loss function $l_{S_A}(w)+\frac{1}{2C} ||w||_2^2$
     over the compressed sample $S_A = \{(Ax_i, y_i) \}_{i=1}^m
     \subset \R^d \times \{-1, 1\} $ satisfies :
     \begin{align}
         l_{\mathcal{D}}(\hat{w}_A) &\leq 
         l_{\mathcal{D}}(w_0) + \mathcal{O}
         \left ( 
-            \lambda R ||w_0||_2 \sqrt(\varepsilon + \frac{1}{m}\log\frac{1}{\delta})
+            \lambda R ||w_0||_2 \sqrt{\varepsilon + \frac{1}{m}\log\frac{1}{\delta}}
         \right )
     \end{align}
     for an appropriate choice of $C$, and recalling that
@@ -577,17 +577,18 @@ our article of interest \cite{arora2018sensing} gives us a useful result :
 \end{theorem}
 We briefly reproduce the ideas of proof of this theorem here, as we think that it is 
 an interesting result regarding the compressed sensing course. 
-\begin{proof}
     First define the $l_2$-regularization of the loss function $l$ as :
     \[L(w) = l(w) + \frac{1}{2C}||w||_2^2\]
+
     \begin{lemma} \label{lemma1}
         Let $\hat{w}$ be the classifier obtained minimizing :
         $L_S(w) = \frac{1}{m} \sum_{i=1}^m l(w^Tx_i, y_i) + \frac{1}{2C}||w||_2^2 $,
+        i.e. $\hat{w}$ is the empirical (regularized) risk minimizer,
         where $l(., .)$ is a convex $\lambda$-Lipschitz function in the first coordinate. 
         Then :
         \[\hat{w} = \sum_{i=1}^m \alpha_i y_i x_i , \ \ \
         |\alpha_i|\leq \frac{\lambda C}{m}, \forall i\]
-        The result holds in the compresssed domain.
+        The result holds in the compressed domain.
     \end{lemma}
     \begin{proof}
          By convexity, the only optimizer can be found
@@ -658,11 +659,13 @@ an interesting result regarding the compressed sensing course.
         second bound.
     \end{proof}
     \begin{lemma}\label{lemma3}
-        \[ L_{\mathcal{D}} (A\hat{w}) \leq 
-         L_{\mathcal{D}}(\hat{w}) + \mathcal{O}(\lambda^2 C R^2 \varepsilon)\]
+        \begin{align*}
+             L_{\mathcal{D}} (A\hat{w}) \leq 
+             L_{\mathcal{D}}(\hat{w}) + \mathcal{O}(\lambda^2 C R^2 \varepsilon)
+        \end{align*}
     \end{lemma}
     \begin{proof}
-        As this proof is a bit too long for this work, we will only insist in 
+        As this proof is very focused on calculations, we will only insist on 
         most important points, and not whole computations. \\ \\
         First, we use \ref{lemma1} to have that :
         \begin{align*}
@@ -675,20 +678,125 @@ an interesting result regarding the compressed sensing course.
             \leq \hat{w}^Tx + 3\lambda CR^2\varepsilon 
         \end{align*}
         As $l$ is $\lambda$-Lipschitz, we can take the expectations over $\mathcal{D}$:
-        \[ l_{\mathcal{D}}(A \hat{w}) \leq l_{\mathcal{D}}(\hat{w}) +  3\lambda CR^2\varepsilon  \]
+        \begin{align} \label{loss1}
+            l_{\mathcal{D}}(A \hat{w}) \leq l_{\mathcal{D}}(\hat{w}) +  3\lambda CR^2\varepsilon
+        \end{align}
+        We now want to compute $||A\hat{w}||_2^2 $:
+        \begin{align*}
+            ||A\hat{w}||_2^2  &= 
+                (A\hat{w})^T(A\hat{w}) \\
+                &=(\sum_{i=1}^T\alpha_i y_i x_i)^T
+                (\sum_{j=1}^T\alpha_j y_j x_j) \\
+                &= \sum_{i=1}^T \sum_{j=1}^T 
+                \alpha_i \alpha_j  
+                y_i y_j
+                (Ax_i)^T (Ax_j) \\
+        \end{align*}
+        Using \ref{lemma2}, 
+        \begin{align*}
+            ||A\hat{w}||_2^2  &\leq ||\hat{w}||_2^2 + 3 \lambda^2 C^2 R^2 \varepsilon \\
+            \Leftrightarrow \frac{1}{2C}||A\hat{w}||_2^2  &\leq\frac{1}{2C} ||\hat{w}||_2^2 + \frac{3}{2} \lambda^2 C R^2 \varepsilon 
+        \end{align*}
+        With this inequality and using \ref{loss1}, we have the result.
     \end{proof}
+    We have shown some results on $\hat{w}$, the empirical regularized
+    risk ($L_S$) minizer. We are now interested in $w^*$, the theoretical regularized
+    risk ($L_\mathcal{D}$) minimizer. 
+    \begin{lemma} \label{lemma4}
+        Letting $w^*$ be the linear classifier minimizing 
+        $L_\mathcal{D}$, we have that, with probability $1-\gamma$ : 
+        \begin{align*}
+            L_\mathcal{D}(\hat{w}) 
+            &\leq L_\mathcal{D}(w^*) 
+            + \mathcal{O}\left (\frac{\lambda^2 C R^2}{m}\log \frac{1}{\gamma} \right )
+        \end{align*}
+    This result holds in the compressed domain.
+    \end{lemma}
+    \begin{proof}
+        Corollary \ref{corollary1} tells us that :
+        \[
+            ||\hat{w}||_2^2 
+            \leq \lambda^2 C^2 R^2 \text{ and }
+            ||\hat{w}_A||_2^2 
+            \leq \lambda^2 C^2 (1+\varepsilon)^2 R^2
+        \]
+        In other words, $\hat{w}$ and $\hat{w_A}$ are contained 
+        in a closed convex subset independent of $S$. Authors use the 
+        fact that $l$ is $\lambda$-Lipschitz to say that $L$ is strongly 
+        $\frac{1}{C}$-strongly convex. Moreover, $||x||_2 \leq R$. 
+        A theorem in \cite{NIPS2008_3400} can be applied, giving that
+        with probability $1-\gamma$:
+        \begin{align*}
+            L_{\mathcal{D}}(\hat{w}) - L_{\mathcal{D}}(w^*) 
+            \leq 2 [L_{\mathcal{S}}(\hat{w}) - L_{\mathcal{S}}(w^*)]_+ 
+            + \mathcal{O}\left( \frac{\lambda^2C R^2}{m} \log \frac{1}{\gamma}  \right)
+        \end{align*} 
+        By definition, $\hat{w}$ minimizes $L_S$, thus :
+        $[L_{\mathcal{S}}(\hat{w}) - L_{\mathcal{S}}(w^*)]_+  = 0$, and the result follows 
+        directly. 
+    \end{proof}
+Now, with these lemmas, we can prove the theorem :
+\begin{proof} As 
+$l_{\mathcal{D}}(\hat{w}_A) \leq l_{\mathcal{D}}(\hat{w}_A) 
++ \frac{1}{2C} ||w^*_A||_2^2 = L_{\mathcal{D}(\hat{w_A})}$.
+Lemma \ref{lemma4}, applied to the compressed domain gives :
+\[ l_\mathcal{D}(\hat{w_A}) \leq
+    L_\mathcal{D}(\hat{w_A}) 
+    \leq L_\mathcal{D}(w_A^*) 
+    + \mathcal{O}\left (\frac{\lambda^2 C R^2}{m}\log \frac{1}{\gamma} \right )
+\]
+As $w^*_A$ is the minimizer of
+ $L_{\mathcal{D}}, L_{\mathcal{D}}(w*_A) \leq L_{\mathcal{D}}(A\hat{w}) $.
+Thus 
+\begin{align*}
+    l_\mathcal{D}(\hat{w_A}) 
+    &\leq L_\mathcal{D}(A\hat{w}) 
+    + \mathcal{O}\left (\frac{\lambda^2 C R^2}{m}\log \frac{1}{\gamma} \right ) \\
+    &\leq L_\mathcal{D}(\hat{w}) + \mathcal{O}(\lambda^2 C R^2 \varepsilon)
+    + \mathcal{O}\left (\frac{\lambda^2 C R^2}{m}\log \frac{1}{\gamma} \right ) 
+    \text{    (lemma 2.5)}\\
+    &\leq L_\mathcal{D}(\hat{w}) 
+    + \mathcal{O}\left ( 
+        \lambda^2CR^2 \left (
+        \varepsilon + \frac{1}{m} \log(\frac{1}{\gamma})
+        \right ) \right ) \\
+\end{align*}
+In the sparse domain, lemma \ref{lemma4} assure that : 
+$L_{\mathcal{D}}(\hat{w}) \leq L_{\mathcal{D}}(w^*) + \mathcal{O}\left (\frac{\lambda^2 C R^2}{m}\log \frac{1}{\gamma} \right )
+$.
+We put this inequality in the last inequality to have:
+\begin{align*}
+    l_\mathcal{D}(\hat{w_A})    
+    &\leq L_\mathcal{D}(w^*) 
+    + \mathcal{O}\left ( 
+        \lambda^2CR^2 \left (
+        \varepsilon + \frac{1}{m} \log(\frac{1}{\gamma})
+        \right ) \right )
+\end{align*}
+Finally, as $w^*$ minimizes $L_{\mathcal{D}}$, 
+$L_{\mathcal{D}}(w^*) \leq L_{\mathcal{D}}(w_0) =
+ l_{\mathcal{D}}(w_0) + \frac{1}{2C}||w_0||_2^2$
+ Which leads to:
+ \begin{align*}
+    l_\mathcal{D}(\hat{w_A})    
+    &\leq  l_{\mathcal{D}}(w_0) + \frac{1}{2C}||w_0||_2^2
+    + \mathcal{O}\left ( 
+        \lambda^2CR^2 \left (
+        \varepsilon + \frac{1}{m} \log(\frac{1}{\gamma})
+        \right ) \right )
+ \end{align*}
 \end{proof}
 
 
-\subsection{Links with LSTMs}
+\subsection{Application on LSTMs}
 
 
 
-\section{Sparse recovery from text embeddings}
+% \section{Sparse recovery from text embeddings}
 
-\subsection{Random word embeddings}
+% \subsection{Random word embeddings}
 
-\subsection{Pretrained word embeddings}
+% \subsection{Pretrained word embeddings}
 
 
 
@@ -705,7 +813,8 @@ an interesting result regarding the compressed sensing course.
 % \subsection{Discussion}
 
 
-
+\newpage 
+\pagenumbering{gobble}
 \bibliography{references} 
 \bibliographystyle{ieeetr}
 \end{document}
