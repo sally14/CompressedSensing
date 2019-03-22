@@ -549,10 +549,15 @@ quality through a downstream task as classification.
 
 As we are interested in the evaluation of text embeddings through 
 text classification, the compressed learning approach proposed 
-in \cite{Calderbank2009CompressedL}, generalized and modified in 
-our article of interest \cite{arora2018sensing} gives us a useful result :
+in \cite{Calderbank2009CompressedL} (generalized and modified in 
+our article of interest \cite{arora2018sensing}) gives us a useful result
+stated in \ref{th1}. This result tells us how training a linear 
+classifier over the compressed data instead of the original data 
+penalizes the classification results. \\ \\We chose to reproduce the
+ ideas of proof of this theorem here, with more detail in general, as we think that it is 
+an very interesting result regarding the compressed sensing course. 
 
-\begin{theorem}
+\begin{theorem}\label{th1}
     For any subset $\mathcal{X}\subset \R^N$ containing the origin, 
     let $A\in \R^{d\times N}$ be $(\Delta \mathcal{X}, \varepsilon)-$RIP, and $m$ 
     samples $S=\{ (x_i, y_i)\} \subset \mathcal{X}\times \{-1, 1\}$
@@ -575,8 +580,21 @@ our article of interest \cite{arora2018sensing} gives us a useful result :
      $\Delta \mathcal{X} = \{x-x' : x, x' \in \mathcal{X} \}$, for 
      any $\mathcal{X}\subset \R^N$
 \end{theorem}
-We briefly reproduce the ideas of proof of this theorem here, as we think that it is 
-an interesting result regarding the compressed sensing course. 
+
+    As the proof is a bit complex, we are going to explain its outline first.
+    The idea is to first define an empirical (regularized) risk minimizer on both 
+    the sparse and the compressed domain, respectively $\hat{w}, \hat{w_A}$.\\ 
+    In parallel, we define the theoretical (regularized) risk minimizer 
+    (which minimizes the loss expectation over the 
+    whole distribution $\mathcal{D}$ ), also both in the sparse 
+    and in the compressed domain, respectively $w^*, w_A^*$. \\
+    On the compressed domain, we compare the loss of $\hat{w_A}$ with 
+    the loss of $w_A^*$. Using a lemma deduced from the RIP condition over $A$
+    and a result from \cite{NIPS2008_3400}, we compare the 
+    losses of $w_A^*$ and $A\hat{w}$. The same lemma enables us to 
+    compare the losses of $A\hat{w}$ and $\hat{w}$. Finally, 
+    we compare the losses of $\hat{w}$ and $w^*$. \\ \\
+
     First define the $l_2$-regularization of the loss function $l$ as :
     \[L(w) = l(w) + \frac{1}{2C}||w||_2^2\]
 
@@ -735,7 +753,7 @@ an interesting result regarding the compressed sensing course.
         $[L_{\mathcal{S}}(\hat{w}) - L_{\mathcal{S}}(w^*)]_+  = 0$, and the result follows 
         directly. 
     \end{proof}
-Now, with these lemmas, we can prove the theorem :
+\textbf{Proof of the theorem}:
 \begin{proof} As 
 $l_{\mathcal{D}}(\hat{w}_A) \leq l_{\mathcal{D}}(\hat{w}_A) 
 + \frac{1}{2C} ||w^*_A||_2^2 = L_{\mathcal{D}(\hat{w_A})}$.
@@ -785,6 +803,7 @@ $L_{\mathcal{D}}(w^*) \leq L_{\mathcal{D}}(w_0) =
         \varepsilon + \frac{1}{m} \log(\frac{1}{\gamma})
         \right ) \right )
  \end{align*}
+ The theorem follows easily by optimizing $C$. 
 \end{proof}
 
 
