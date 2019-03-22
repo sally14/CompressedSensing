@@ -562,8 +562,8 @@ an interesting result regarding the compressed sensing course.
 \begin{proof}
     First define the $l_2$-regularization of the loss function $l$ as :
     \[L(w) = l(w) + \frac{1}{2C}||w||_2^2\]
-    \begin{lemma}
-        Let $\hat{w}$ be the classifier obtained minimzing :
+    \begin{lemma} \label{lemma1}
+        Let $\hat{w}$ be the classifier obtained minimizing :
         $L_S(w) = \frac{1}{m} \sum_{i=1}^m l(w^Tx_i, y_i) + \frac{1}{2C}||w||_2^2 $,
         where $l(., .)$ is a convex $\lambda$-Lipschitz function in the first coordinate. 
         Then :
@@ -588,7 +588,7 @@ an interesting result regarding the compressed sensing course.
         is bounded by $\lambda$, implying $|\partial_{\hat{w}^Tx_i} l(\hat{w}^T x_i, y_i)| \leq \lambda$. 
         Hence the result.
     \end{proof}
-    \begin{lemma}
+    \begin{lemma}\label{lemma2}
         \[ x, x' \in \mathcal{X} 
         \Rightarrow 
         (1+\varepsilon) x^Tx' - 2R^2 \varepsilon 
@@ -633,6 +633,32 @@ an interesting result regarding the compressed sensing course.
             \leq \lambda^2 C^2 (1+\varepsilon)^2 R^2
         \]
     \end{corollary}
+    \begin{proof} \label{corollary1}
+        Using \ref{lemma1} when calculating $||\hat{w}||_2^2$, and using
+        $||x||_2\leq R$, we find the first bound. Using \ref{lemma2}, when 
+        calculating $||\hat{w}_A||_2^2$, and $||x||_2\leq R$, we find the 
+        second bound.
+    \end{proof}
+    \begin{lemma}\label{lemma3}
+        \[ L_{\mathcal{D}} (A\hat{w}) \leq 
+         L_{\mathcal{D}}(\hat{w}) + \mathcal{O}(\lambda^2 C R^2 \varepsilon)\]
+    \end{lemma}
+    \begin{proof}
+        As this proof is a bit too long for this work, we will only insist in 
+        most important points, and not whole computations. \\ \\
+        First, we use \ref{lemma1} to have that :
+        \begin{align*}
+            (A\hat{w})^T(Ax)  = \sum_{i=1}^m \alpha_i y_i (A x_i)^T(Ax)
+        \end{align*}
+        Using \ref{lemma2}, 
+        \begin{align*}
+            \hat{w}^Tx - 3\lambda CR^2\varepsilon 
+            \leq (A\hat{w})^T(Ax) 
+            \leq \hat{w}^Tx + 3\lambda CR^2\varepsilon 
+        \end{align*}
+        As $l$ is $\lambda$-Lipschitz, we can take the expectations over $\mathcal{D}$:
+        \[ l_{\mathcal{D}}(A \hat{w}) \leq l_{\mathcal{D}}(\hat{w}) +  3\lambda CR^2\varepsilon  \]
+    \end{proof}
 \end{proof}
 
 
