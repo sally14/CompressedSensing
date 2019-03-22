@@ -179,6 +179,7 @@
 % \newpage 
 \pagenumbering{gobble}
 \newpage
+\setcounter{tocdepth}{2}
 % \thispagestyle{empty}
 \section*{Introduction}
 
@@ -222,13 +223,30 @@ sensing part, and its application in text embeddings. Finally, we
 will present a reproduction of author's results, and discuss their
  statings and their implications.
 
+ % Now that we have presented text embedding, we can present some of 
+% their most well-known applications. As text embeddings 
+% are a general, abstract, numerical representation for texts, 
+% they serve in many NLP tasks : text classification, and 
+% more specifically sentiment analysis (is a product review positive, 
+% negative, or neutral?), text similarity analysis, but 
+% also information retrieval. In information retrieval (IR), 
+% a common problem is to find the most relevant documents 
+% regarding a query. In classic IR systems, documents are compared 
+% with queries through co-occurence matrices, or through TF-IDF, 
+% which is commonly used in tech as it i a central part in 
+% Lucene and ElasticSearch algorithms. However, modern IR 
+% systems focuss on finding document and queries embeddings, 
+% in order to match the two by comparing them in a common 
+% latent space. Thus, text embeddings are useful in many 
+% machine learning tasks, but also in information retrieval 
+% problems. 
 
 \newpage 
 
 \tableofcontents
 \newpage
 \pagenumbering{arabic}
-\section{Text embeddings}
+\section{Text embedding as a Compressed Sensing problem}
 
 A text embedding is a vector representing a text. Usually, 
 we want this representation to be low-dimensional, and to 
@@ -493,29 +511,29 @@ to NLP problems because of their
 sequential nature. 
 
 
-\subsection{Why text embeddings? }
+% \subsection{Why text embeddings? }
 
 
-Now that we have presented text embedding, we can present some of 
-their most well-known applications. As text embeddings 
-are a general, abstract, numerical representation for texts, 
-they serve in many NLP tasks : text classification, and 
-more specifically sentiment analysis (is a product review positive, 
-negative, or neutral?), text similarity analysis, but 
-also information retrieval. In information retrieval (IR), 
-a common problem is to find the most relevant documents 
-regarding a query. In classic IR systems, documents are compared 
-with queries through co-occurence matrices, or through TF-IDF, 
-which is commonly used in tech as it i a central part in 
-Lucene and ElasticSearch algorithms. However, modern IR 
-systems focuss on finding document and queries embeddings, 
-in order to match the two by comparing them in a common 
-latent space. Thus, text embeddings are useful in many 
-machine learning tasks, but also in information retrieval 
-problems. 
+% Now that we have presented text embedding, we can present some of 
+% their most well-known applications. As text embeddings 
+% are a general, abstract, numerical representation for texts, 
+% they serve in many NLP tasks : text classification, and 
+% more specifically sentiment analysis (is a product review positive, 
+% negative, or neutral?), text similarity analysis, but 
+% also information retrieval. In information retrieval (IR), 
+% a common problem is to find the most relevant documents 
+% regarding a query. In classic IR systems, documents are compared 
+% with queries through co-occurence matrices, or through TF-IDF, 
+% which is commonly used in tech as it i a central part in 
+% Lucene and ElasticSearch algorithms. However, modern IR 
+% systems focuss on finding document and queries embeddings, 
+% in order to match the two by comparing them in a common 
+% latent space. Thus, text embeddings are useful in many 
+% machine learning tasks, but also in information retrieval 
+% problems. 
 
-\newpage
-\section{Text embedding as a Compressed Sensing problem}
+% \newpage
+\section{Learning to classify in the compressed domain}
 
 Texts can be viewed as a collection of sparses measures (words) 
 over a complex signal (ideas, a meaning, a sentiment, etc.). The
@@ -664,21 +682,27 @@ an interesting result regarding the compressed sensing course.
 
 \subsection{Links with LSTMs}
 
-\subsection{Sparse recovery with pretrained embeddings}
+
+
+\section{Sparse recovery from text embeddings}
+
+\subsection{Random word embeddings}
+
+\subsection{Pretrained word embeddings}
 
 
 
 
 
-\newpage
-\section{Experiments and discussion}
+% \newpage
+% \section{Experiments and discussion}
 
-\subsection{Results reproduction}
+% \subsection{Results reproduction}
 
-\subsection{Testing DisC embeddings on real life data}
+% \subsection{Testing DisC embeddings on real life data}
 
 
-\subsection{Discussion}
+% \subsection{Discussion}
 
 
 
