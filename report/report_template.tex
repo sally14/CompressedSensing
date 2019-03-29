@@ -99,6 +99,7 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition2}[theorem]{Proposition}
  
     % transposition de tableaux
     
@@ -202,7 +203,7 @@ However, the efficiency of these results is totally empirical
 and is not backed by theoretical results, in addition to having 
 high computationnal costs. The article studied in this project \cite{arora2018sensing}
 aims at giving some results on unsupervised text embeddings. 
-\\ \\
+\\ \\
 To do so, it focusses on a compressed sensing view of the text 
 embedding problem, which aims at provinding low-dimensional representation
 for texts. As words can be viewed 
@@ -216,7 +217,7 @@ performances on text classification), authors
 of low-dimensional compressed sensing representations as inputs
 for a classification problem. Showing that some embeddings are 
 compressing matrix verifying the proper RIP conditions, 
-the above compressed learning results apply.  \\ \\
+the above compressed learning results apply.  \\ \\
 In this work, we will first recall what are words and text embeddings, 
 in order to recall the basic NLP background for a non-specialized reader,
 and we will present author's text embeddings, how they 
@@ -268,7 +269,7 @@ The very beginning of most popular
 text embeddings is word embeddings. In this part
 we will briefly explain how such embeddings are learned, and we will
 set the definitions and the general context for the rest of the 
-work. \\ \\
+work. \\ \\
 Supposing that we have a vocabulary 
 $\mathcal{V} = \{w_1, ..., w_V \}$, of size 
 $| \mathcal{V} | = V$, a natural vector representation of any word 
@@ -322,7 +323,7 @@ keeping only the $k$
 most important singular values and vectors, leading to a new truncated
 version of $W$, of size $V\times k$, which becomes the embedding
 matrix, each line being a word's embedding. This decomposition
-has good denoising and generalization properties. \\ \\
+has good denoising and generalization properties. \\ \\
 In parallel, the most popular deep learning embedding
 is the Word2Vec embedding, proposed in \cite{NIPS2013_5021}. This 
 embedding is learned by trying to predict a word from its context 
@@ -349,7 +350,7 @@ company that it keeps"}. Thus, words employed in similar contexts
 are more likely to have similar meanings. However, latest deep learning 
 developments seem to have abandoned this approach, replaced by language modelling
 as in \cite{howard2018universal, Peters_2018, devlin2018bert}, which 
-are outside the scope of this project. \\ \\
+are outside the scope of this project. \\ \\
 The evaluation of such embeddings is difficult, as they are learned in an 
 unsupervised way. However, two techniques are generally used to assess
 embeddings representation quality : the evaluation of the embedding through
@@ -380,7 +381,7 @@ for instance the set of unigrams is $\{v_1, ..., v_T \}$, the set
 of bigrams is $\{(v_1,v_2), (v_2, v_3), (v_1, v_3) ..., (v_{V-1}, v_V) \}$, etc.
 We let $V_k$ be the number of possible $k$-grams over $\mathcal{V}$,
 independently of order ($V_1 = V$), and 
-$V_n^{\text{sum}} = \sum_{k=1}^n V_k$.\\ \\
+$V_n^{\text{sum}} = \sum_{k=1}^n V_k$.\\ \\
 For any $k\in \N$, let $B_k$ be a vector indicating, 
 for any possible $k$-gram over $\mathcal{V}$, the number 
 of occurences of this $k$-gram in the document.
@@ -406,7 +407,7 @@ Supposing that we have learned word embeddings and that we denote
 $x_{v_i} \in \R^d, d<<V$ the embedding of the word $v_i \in \mathcal{V}$, for any
 $i=1,..., n$; and that we still have our document $d= w_1, ..., w_T$; 
 then the unigram embedding of the document is :
-\[z^u = \sum_{t=1}^T x_{w_t}\]
+\[z^u = \sum_{t=1}^T x_{w_t}\]
 $z^u$ can be re-written as the product of a compression matrix $A$ 
 in which columns are word embeddings $x_w$; and the "Bag-of-1-grams" document embedding : 
 
@@ -438,7 +439,7 @@ As with classic RNNs, the point in LSTMs is to be able to
 handle sequential data, say for instance a document made of already 
 embedded words :
 
-\[   x =\{x_1, ..., x_T \} \]
+\[   x =\{x_1, ..., x_T \} \]
 
 \noindent A given LSTM cell $A$ 'evolves' with the time, and is caracterized in time 
 by a \textit{hidden state} $h_t$ and a \textit{memory} $c_t$. We denote $A^{(t)}$ the state of cell
@@ -488,7 +489,7 @@ to remember. To do so, we define :
 Some variants of LSTM cells may define input, output and forget gates differently. For instance,
 the peephole version of LSTM implements the natural idea that the previous memory state $c_{t-1}$
 has to be considered when deciding the input, output and forget rates.  GRU, Gated Recurrent Units 
-are other variants of LSTMs. \\ \par 
+are other variants of LSTMs. \\ \par 
 
 \begin{center}
     \captionof{figure}{A representation of a LSTM cell in time}
@@ -502,15 +503,7 @@ the document embedding. This representation of the document
 is unsupervised, and the LSTM is usually trained on another 
 task, regarding which $(h_t)_{t=1...T}$ are features (see for 
 instance \cite{Lample_2016} for an example of LSTMs trained 
-for named entity recognition). 
-
-Appart from having a very flexible and modular structure,
- LSTMs cells do not suffer of the same 
-vanishing gradient problem as RNNs in practice,
- and are thus more effective
-in modelling sequential data. They are particularly adapted 
-to NLP problems because of their 
-sequential nature. 
+for named entity recognition). \\
 
 
 % \subsection{Why text embeddings? }
@@ -555,7 +548,7 @@ in \cite{Calderbank2009CompressedL} (generalized and modified in
 our article of interest \cite{arora2018sensing}) gives us a useful result
 stated in \ref{th1}. This result tells us how training a linear 
 classifier over the compressed data instead of the original data 
-penalizes the classification results. \\ \\We chose to reproduce the
+penalizes the classification results. \\ \\We chose to reproduce the
  ideas of proof of this theorem here, with more detail in general, as we think that it is 
 an very interesting result regarding the compressed sensing course. 
 
@@ -564,7 +557,7 @@ an very interesting result regarding the compressed sensing course.
     let $A\in \R^{d\times N}$ be $(\Delta \mathcal{X}, \varepsilon)-$RIP, and $m$ 
     samples $S=\{ (x_i, y_i)\} \subset \mathcal{X}\times \{-1, 1\}$
     be drawn i.i.d. from the same distribution $\mathcal{D}$ over 
-    $\mathcal{X}$, with $||x||_2 \leq R$. \\ 
+    $\mathcal{X}$, with $||x||_2 \leq R$. \\ 
     If $l$ is a $\lambda$-Lipschitz convex loss function and $w_0\in \R^N$
     is its minimizer over $\mathcal{D}$, then, with probability
     $1-2\delta$, the linear classifier $\hat{w}_A\in \R^d$ minimizing the 
@@ -583,6 +576,7 @@ an very interesting result regarding the compressed sensing course.
      any $\mathcal{X}\subset \R^N$
 \end{theorem}
 
+
     As the proof is a bit complex, we are going to explain its outline first.
     The idea is to first define an empirical (regularized) risk minimizer on both 
     the sparse and the compressed domain, respectively $\hat{w}, \hat{w_A}$.\\ 
@@ -595,7 +589,7 @@ an very interesting result regarding the compressed sensing course.
     and a result from \cite{NIPS2008_3400}, we compare the 
     losses of $w_A^*$ and $A\hat{w}$. The same lemma enables us to 
     compare the losses of $A\hat{w}$ and $\hat{w}$. Finally, 
-    we compare the losses of $\hat{w}$ and $w^*$. \\ \\
+    we compare the losses of $\hat{w}$ and $w^*$. \\ \\
 
     First define the $l_2$-regularization of the loss function $l$ as :
     \[L(w) = l(w) + \frac{1}{2C}||w||_2^2\]
@@ -606,7 +600,7 @@ an very interesting result regarding the compressed sensing course.
         i.e. $\hat{w}$ is the empirical (regularized) risk minimizer,
         where $l(., .)$ is a convex $\lambda$-Lipschitz function in the first coordinate. 
         Then :
-        \[\hat{w} = \sum_{i=1}^m \alpha_i y_i x_i , \ \ \
+        \[\hat{w} = \sum_{i=1}^m \alpha_i y_i x_i , \ \ \
         |\alpha_i|\leq \frac{\lambda C}{m}, \forall i\]
         The result holds in the compressed domain.
     \end{lemma}
@@ -662,7 +656,7 @@ an very interesting result regarding the compressed sensing course.
             &\leq (1+\varepsilon)(||x||^2_2  + ||x'||^2_2) - 2 (Ax)^T(Ax') \\
         \end{align*}
         Finally, using the hypothesis : $||x||_2 \leq R$, 
-        \[  (Ax)^T(Ax') \leq (1-\varepsilon)x^Tx' + 2R^2\varepsilon \]
+        \[  (Ax)^T(Ax') \leq (1-\varepsilon)x^Tx' + 2R^2\varepsilon \]
     \end{proof}
     \begin{corollary}
         \[
@@ -680,13 +674,13 @@ an very interesting result regarding the compressed sensing course.
     \end{proof}
     \begin{lemma}\label{lemma3}
         \begin{align*}
-             L_{\mathcal{D}} (A\hat{w}) \leq 
-             L_{\mathcal{D}}(\hat{w}) + \mathcal{O}(\lambda^2 C R^2 \varepsilon)
+             L_{\mathcal{D}} (A\hat{w}) \leq 
+             L_{\mathcal{D}}(\hat{w}) + \mathcal{O}(\lambda^2 C R^2 \varepsilon)
         \end{align*}
     \end{lemma}
     \begin{proof}
         As this proof is very focused on calculations, we will only insist on 
-        most important points, and not whole computations. \\ \\
+        most important points, and not whole computations. \\ \\
         First, we use \ref{lemma1} to have that :
         \begin{align*}
             (A\hat{w})^T(Ax)  = \sum_{i=1}^m \alpha_i y_i (A x_i)^T(Ax)
@@ -714,8 +708,8 @@ an very interesting result regarding the compressed sensing course.
         \end{align*}
         Using \ref{lemma2}, 
         \begin{align*}
-            ||A\hat{w}||_2^2  &\leq ||\hat{w}||_2^2 + 3 \lambda^2 C^2 R^2 \varepsilon \\
-            \Leftrightarrow \frac{1}{2C}||A\hat{w}||_2^2  &\leq\frac{1}{2C} ||\hat{w}||_2^2 + \frac{3}{2} \lambda^2 C R^2 \varepsilon 
+            ||A\hat{w}||_2^2  &\leq ||\hat{w}||_2^2 + 3 \lambda^2 C^2 R^2 \varepsilon \\
+            \Leftrightarrow \frac{1}{2C}||A\hat{w}||_2^2  &\leq\frac{1}{2C} ||\hat{w}||_2^2 + \frac{3}{2} \lambda^2 C R^2 \varepsilon 
         \end{align*}
         With this inequality and using \ref{loss1}, we have the result.
     \end{proof}
@@ -809,9 +803,101 @@ $L_{\mathcal{D}}(w^*) \leq L_{\mathcal{D}}(w_0) =
 \end{proof}
 
 
-\subsection{Application on LSTMs}
+\subsection{Application to LSTM Embeddings}
 
 
+The main result of the paper is to show that there exists an LSTM with reasonable memory size, leading to an embedding whose performance on a linear classification is close to the optimal one in the sparse domain. It is stated as follows. \\
+
+\begin{theorem}
+Let $S = \{(x_i, y_i)\}_{i=1}^m$ an iid sample, with distribution $\mathcal{D}$ over BonC vectors of documents of length at most T. Let $w_0$ be the linear classifier minimizing the logistic loss $\ell_{D}$. Then for dimension $d = \tilde{\Omega}\left(\frac{T}{\varepsilon^2} \log \frac{n V_n^{\max}}{\gamma}\right)$, there exists an $\mathcal{O}(nd)$-memory LSTM over i.i.d. word embeddings $v_w \thicksim \mathcal{U}\{\frac{-1}{\sqrt{d}}, \frac{1}{\sqrt{d}}\}$ such that w.p. $(1-\gamma)(1 - 2\delta)$, the classifier $\widehat{w}$ minimizing the $\ell_2$-regularized logistic loss over the LSTM representations satisfies: 
+\end{theorem} 
+
+
+
+
+\begin{proof}
+
+This results mainly relies on the theorem 4.2 that we demonstrated above. The demonstration follows the following steps:
+
+\begin{itemize}
+\item[$\bullet$] The authors start by showing that their exists an LSTM with requiered memory size whose embedding is the same as the DisC embedding. This step is very technical and not extremely interesting from a theoretical point of view, therefore we will not detail it here.
+\item[$\bullet$] We can then show that for this Disc Embedding, the corresponding sensing matrix $A^{(n)}$ is ($\Delta \mathcal{X}_T^{(n)}, \varepsilon$)-RIP w.p. $1 - \gamma$.
+\item[$\bullet$] Finally, we can easily verify that the other conditions of theorem 4.2 apply, leading to the desired bound.
+\end{itemize}
+
+The important step here is therefore the second one. To prove it, we start by writting the sensing matrix of the DisC embedding as a diagonal block matrix, each block matrix $A_p$ corresponding to the sensing matrix of the $p$-coocurences.
+
+$$A^{(n)}=
+    \left (
+    \begin{array}{ccc}
+        A_1 &  & (0) \\
+                & \ddots&          \\
+        (0) &  & A_n \\
+    \end{array}
+    \right )
+$$
+
+We then show that for each $p$, the matrix $A_p$ is ($2T, \epsilon$)-RIP w.p. $1 - \frac{\gamma}{n}$. This result relies on the following result (Foucart \& Rauhut, 2013): \\
+
+\begin{lemma}
+If $d = \tilde{\Omega}\left(\frac{T}{\varepsilon} \log \frac{n V_p}{\gamma}\right)$, for $(\varepsilon, \gamma) \in (0, 1)$, if $\sqrt{d} A$ is a $d \times N$ matrix associated with a bouded orthonormal system (BOS) with constant B, then $A$ is $(k, \epsilon)$-RIP w.p. $1 - \frac{\gamma}{n}$.
+\end{lemma}
+
+We therefore have to show that $\sqrt{d} A_p$ is a matrix associated with a BOS, which means that $\exists (\varphi_j)_j$ and $(x_i)_i \overset{iid}{\thicksim} \mathcal{D}$ such that
+
+$$ \sqrt{d} A^p_{i, j} = \varphi_j(x_i) $$
+
+and 
+
+$$ \begin{cases}
+\esp_{x \thicksim \mathcal{D}}[\varphi_j(x)\varphi_i(x)] = \un_{i=j} \\
+\underset{x}{\sup} \ \varphi_i(x) \leq B
+\end{cases}
+$$
+
+Indeed, if we denote
+
+$$ g(j) = \{g_1(j), ..., g_p(j)\} $$ 
+
+the set of words corresponding to the $j$-th pgram, by construction of the DisC embedding we have
+
+$$ A_{i, j} = \prod_{t=1}^p x^{(i)}_{g_t(j)} = \varphi_j(x_i) $$
+
+with $x_i \thicksim \mathcal{U}\{\frac{-1}{\sqrt{d}}, \frac{1}{\sqrt{d}}\}$. This is equivalent to 
+
+$$ \sqrt{d} A_{i, j} =  \varphi_j(x_i), \quad x_i \thicksim \mathcal{U}(\{-1, 1\}). $$
+
+First, since $|x_i| \leq 1$, we have $|\varphi_j(x_i)| \leq 1$. Then, we can compute the following expectation:
+
+\begin{align*}
+\esp[\varphi_j(x_i)\varphi_j(x_i)] &= \esp\left[\prod_{t=1}^p x^{(i)}_{g_t(j)} x^{(i)}_{g_t(j')}\right] \\
+&= \begin{cases}
+1 \quad  \text{if} \ \forall t, \ g_t(j) = g_t(j') \\
+0 \quad \text{otherwise}
+\end{cases} \\
+&= \un_{j=j'}
+\end{align*}
+
+Hence $ \sqrt{d} A_{i, j}$ is a matrix associated with a BOS with $B=1$. It follows from the previous lemma that $A_p$ is a ($2T, \epsilon$)-RIP w.p. $1 - \frac{\gamma}{n}$. \\
+
+Now, for $x \in \Delta \mathcal{X}_T^{(n)}$, since all vectors $x_p$ are $2T$ sparse,
+
+$$ \| A x \|^2  = \sum_{p=1}^n \| A_p x_p \|^2 $$
+
+using the union bound we have w.p. $1 - n \times \frac{\gamma}{n} = 1 - \gamma$:
+
+\begin{align*}
+ &\sum_{p=1}^n (1-\varepsilon)^2 \| x_p \|^2 \leq \| A x \|^2  \leq \sum_{p=1}^n (1+\varepsilon)^2 \| x_p \|^2  \\
+\Rightarrow \quad &(1-\varepsilon)^2 \| x \|^2 \leq\| A x \|^2 \leq (1+\varepsilon)^2 \| x \|^2
+\end{align*}
+
+Which shows that $A^{(n)}$ is a ($\Delta \mathcal{X}_T^{(n)}, \epsilon$)-RIP w.p. $1 - \gamma$. 
+
+\end{proof}
+
+\section*{Conclusion}
+
+The aim of this paper was to provide a new way to analyse unsupervised text embeddings, using the framework of compressed sensing. Indeed, the embedding of a document can be seen as a low dimension representation coming from a high dimensional signal (the original text). By formalizing this idea, the authors provide theoretical results on the performance of specific document embeddings, by comparing the performance of linear classifiers on the sparse domain and on the compressed domain. Finally, they manage to extent this result to the embeddings of a specific LSTM model.
 
 % \section{Sparse recovery from text embeddings}
 
